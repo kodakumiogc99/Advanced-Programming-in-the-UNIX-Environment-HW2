@@ -4,15 +4,15 @@ DIR=include/
 OBJ=$(patsubst %cpp, %o, $(patsubst %c, %o, $(wildcard *.cpp *.c)))
 SUBOBJ=$(patsubst %cpp, %o, $(patsubst %c, %o, $(wildcard $(DIR)*.cpp $(DIR)*.c)))
 SRC=$(basename $(notdir $(wildcard *.cpp *.c)))
-all: $(SRC)
+all: hw2.so
 	@echo SUCCESFUL
 
-$(SRC): $(SUBOBJ) $(OBJ)
-	$(CC) $(CFLAG) -o $@ $^
+hw2.so:
+	$(CC) -o hw2.so -shared -fPIC hw2.c -ldl
 
 %.o: %.c
 	$(CC) $(CFLAG) -c -o $@ $<
 
 
 clean:
-	rm -rf $(OBJ) $(SRC) $(SUBOBJ)
+	rm -rf $(OBJ) $(SRC) $(SUBOBJ) $(SRC).so
