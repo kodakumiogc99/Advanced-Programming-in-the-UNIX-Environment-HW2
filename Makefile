@@ -23,4 +23,4 @@ logger: hw2.c
 
 
 clean:
-	rm -rf $(OBJ) $(SRC) $(SUBOBJ) $(TOOLOBJ) *.so
+	rm -rf $(OBJ) $(SRC) $(SUBOBJ) $(TOOLOBJ) *.so logger

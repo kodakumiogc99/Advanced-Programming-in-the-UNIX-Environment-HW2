@@ -126,8 +126,8 @@ ssize_t write(int fd, const void* buf, size_t count)
     char name[0xFFF] = { '\0' };
     fd_path(fd, name);
 
-    char str[32] = { '\0' };
-    check_buffer(buf,str);
+    char str[35] = { '\0' };
+    check_buffer((char*)buf, str, count);
 
     ssize_t reval = c(fd, buf, count);
 
@@ -161,10 +161,10 @@ ssize_t read(int fd, void* buf, size_t count)
     char name[0xFFF] = {'\0'};
     fd_path(fd, name);
 
-    char str[32] = {'\0'};
-    check_buffer(buf, str);
+    char str[35] = {'\0'};
+    check_buffer(buf, str, count);
 
-    show("read(%s, \"%s\", %ld) = %ld\n", name, str, count, reval);
+    show("read(\"%s\", \"%s\", %ld) = %ld\n", name, str, count, reval);
 
     return reval;
 }
@@ -183,18 +183,15 @@ FILE* tmpfile(void)
 
 size_t fread(void* ptr, size_t size, size_t nmemb, FILE* stream)
 {
-    size_t (*c)();
+    size_t (*c)(void*, size_t, size_t, FILE*);
     *(size_t**)(&c) = dlsym(RTLD_NEXT, "fread");
 
     size_t reval = c(ptr, size, nmemb, stream);
 
     char name[0xFFF] = {'\0'};
     fd_path(stream, name);
-    char str[32] = { '\0' };
-    check_buffer((const void*)ptr, str);
-
-    int (*f)();
-    *(int**)(&f) = dlsym(RTLD_NEXT, "fprintf");
+    char str[35] = { '\0' };
+    check_buffer((const void*)ptr, str, nmemb);
 
     show("fread(\"%s\", %ld, %ld, \"%s\") = %ld\n", str, size, nmemb, name, reval);
 
@@ -203,18 +200,15 @@ size_t fread(void* ptr, size_t size, size_t nmemb, FILE* stream)
 
 size_t fwrite(const void* ptr, size_t size, size_t nmemb, FILE* stream)
 {
-    size_t (*c)();
+    size_t (*c)(const void*, size_t, size_t, FILE*);
     *(size_t**)(&c) = dlsym(RTLD_NEXT, "fwrite");
 
     size_t reval = c(ptr, size, nmemb, stream);
 
     char name[0xFFF] = {'\0'};
     fd_path(stream, name);
-    char str[32] = { '\0' };
-    check_buffer(ptr, str);
-
-    int (*f)();
-    *(int**)(&f) = dlsym(RTLD_NEXT, "fprintf");
+    char str[35] = { '\0' };
+    check_buffer(ptr, str, nmemb);
 
     show("fwrite(\"%s\", %ld, %ld, \"%s\") = %ld\n", str, size, nmemb, name, reval);
 
@@ -223,7 +217,7 @@ size_t fwrite(const void* ptr, size_t size, size_t nmemb, FILE* stream)
 
 int fclose(FILE* stream)
 {
-    int (*c)();
+    int (*c)(FILE*);
     *(int**)(&c) = dlsym(RTLD_NEXT, "fclose");
 
     char name[0xFFF] = { '\0' };
@@ -238,7 +232,7 @@ int fclose(FILE* stream)
 
 int remove(const char* pathname)
 {
-    int (*c)();
+    int (*c)(const char*);
     *(int**)(&c) = dlsym(RTLD_NEXT, "remove");
 
     char *r_path = resolved_path(pathname);

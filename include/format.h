@@ -1,6 +1,6 @@
 void show(const char* format, ...);
 
-void check_buffer(const void* buf, char* str);
+void check_buffer(const char* buf, char* str, size_t count);
 
 char* resolved_path(const char* pathname);
 

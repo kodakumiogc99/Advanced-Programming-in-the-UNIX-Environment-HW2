@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
     read(fd2, tmp, 100);
     close(fd2);
     FILE* f = tmpfile();
-    fwrite("ccc", 1, 5, f);
+    fwrite("cccc", 1, 5, f);
     fclose(f);
     char ptr[0xFFF];
     FILE* n = fopen("/home/gura/hw2/tmp/bbbb", "r");
